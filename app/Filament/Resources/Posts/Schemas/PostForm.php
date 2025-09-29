@@ -1,0 +1,130 @@
+<?php
+
+namespace App\Filament\Resources\Posts\Schemas;
+
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\FileUpload;
+
+class PostForm
+{
+    public static function configure(Schema $schema): Schema
+    {
+        return $schema
+            ->columns(1)
+            ->components([
+                Section::make('Post Details')
+                    ->schema([
+                        TextInput::make('title')
+                            ->required()
+                            ->maxLength(255)
+                            ->live(onBlur: true)
+                            ->columnSpanFull()
+                            ->afterStateUpdated(function (string $operation, $state, \Filament\Forms\Set $set) {
+                                if ($operation !== 'create') {
+                                    return;
+                                }
+                                $set('slug', \Illuminate\Support\Str::slug($state));
+                            }),
+                        
+                        TextInput::make('slug')
+                            ->required()
+                            ->maxLength(255)
+                            ->unique(\App\Models\Post::class, 'slug', ignoreRecord: true)
+                            ->rules(['alpha_dash'])
+                            ->columnSpanFull(),
+                        
+                        Select::make('status')
+                            ->options(\App\Models\Post::getStatusOptions())
+                            ->default('draft')
+                            ->required()
+                            ->columnSpanFull(),
+                        
+                        DateTimePicker::make('published_at')
+                            ->label('Publish Date')
+                            ->nullable()
+                            ->columnSpanFull(),
+                    ])
+                    ->collapsible(),
+                
+                Section::make('Author')
+                    ->schema([
+                        Select::make('user_id')
+                            ->label('Author')
+                            ->relationship('user', 'name')
+                            ->required()
+                            ->default(auth()->id())
+                            ->columnSpanFull(),
+                    ])
+                    ->collapsible(),
+                
+                Section::make('Content')
+                    ->schema([
+                        RichEditor::make('content')
+                            ->required()
+                            ->columnSpanFull()
+                            ->toolbarButtons([
+                                'attachFiles',
+                                'blockquote',
+                                'bold',
+                                'bulletList',
+                                'codeBlock',
+                                'h2',
+                                'h3',
+                                'italic',
+                                'link',
+                                'orderedList',
+                                'redo',
+                                'strike',
+                                'underline',
+                                'undo',
+                            ]),
+                        
+                        Textarea::make('excerpt')
+                            ->label('Excerpt')
+                            ->helperText('Brief description of the post. If left empty, it will be generated from content.')
+                            ->maxLength(500)
+                            ->rows(3)
+                            ->columnSpanFull(),
+                    ])
+                    ->collapsible(),
+                
+                Section::make('Media')
+                    ->schema([
+                        FileUpload::make('featured_image')
+                            ->label('Featured Image')
+                            ->image()
+                            ->directory('posts/featured-images')
+                            ->disk('public')
+                            ->required(false)
+                            ->maxSize(2048)
+                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                            ->helperText('Click to browse or drag and drop an image file')
+                            ->columnSpanFull(),
+                    ])
+                    ->collapsible(),
+                
+                Section::make('SEO')
+                    ->schema([
+                        TextInput::make('meta_title')
+                            ->label('Meta Title')
+                            ->maxLength(60)
+                            ->helperText('Recommended: 50-60 characters')
+                            ->columnSpanFull(),
+                        
+                        Textarea::make('meta_description')
+                            ->label('Meta Description')
+                            ->maxLength(160)
+                            ->rows(3)
+                            ->helperText('Recommended: 150-160 characters')
+                            ->columnSpanFull(),
+                    ])
+                    ->collapsible(),
+            ]);
+    }
+}
