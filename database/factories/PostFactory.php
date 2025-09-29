@@ -17,7 +17,7 @@ class PostFactory extends Factory
     public function definition(): array
     {
         $title = fake()->sentence(rand(3, 8));
-        
+
         return [
             'title' => $title,
             'slug' => \Illuminate\Support\Str::slug($title),

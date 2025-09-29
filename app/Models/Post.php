@@ -15,7 +15,7 @@ class Post extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'title',
@@ -121,7 +121,7 @@ class Post extends Model
     public function scopePublished($query)
     {
         return $query->where('status', 'published')
-                    ->where('published_at', '<=', now());
+            ->where('published_at', '<=', now());
     }
 
     /**
@@ -141,7 +141,10 @@ class Post extends Model
             return $value;
         }
 
+        if (is_null($this->content)) {
+            return '';
+        }
+
         return Str::limit(strip_tags($this->content), 150);
     }
-
 }

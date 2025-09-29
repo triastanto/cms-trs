@@ -13,7 +13,7 @@ describe('Category Model', function () {
 
     describe('Basic Attributes', function () {
         it('has the correct fillable attributes', function () {
-            $category = new Category();
+            $category = new Category;
             $expectedFillable = [
                 'name',
                 'slug',
@@ -28,7 +28,7 @@ describe('Category Model', function () {
         });
 
         it('has the correct casts', function () {
-            $category = new Category();
+            $category = new Category;
             $expectedCasts = [
                 'is_active' => 'boolean',
                 'sort_order' => 'integer',
@@ -55,7 +55,6 @@ describe('Category Model', function () {
             expect($parent->children->first())->toBeInstanceOf(Category::class);
         });
 
-
         it('orders children by sort_order', function () {
             $parent = Category::factory()->create();
             $child1 = Category::factory()->create(['parent_id' => $parent->id, 'sort_order' => 3]);
@@ -73,7 +72,7 @@ describe('Category Model', function () {
         it('belongs to many posts', function () {
             $category = Category::factory()->create();
             $posts = Post::factory()->count(3)->create();
-            
+
             $category->posts()->attach($posts->pluck('id'));
 
             expect($category->posts)->toHaveCount(3);
@@ -90,7 +89,6 @@ describe('Category Model', function () {
 
             expect($category->slug)->toBe('web-development');
         });
-
 
         it('uses slug as route key', function () {
             $category = Category::factory()->create(['slug' => 'my-category']);

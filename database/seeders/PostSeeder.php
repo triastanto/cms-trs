@@ -2,12 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Models\Post;
 use App\Models\Category;
+use App\Models\Post;
 use App\Models\Tag;
 use App\Models\User;
-use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
 
 class PostSeeder extends Seeder
 {
@@ -22,6 +22,7 @@ class PostSeeder extends Seeder
 
         if ($categories->isEmpty() || $tags->isEmpty() || $users->isEmpty()) {
             $this->command->warn('Make sure Categories, Tags, and Users are seeded first!');
+
             return;
         }
 
@@ -175,7 +176,7 @@ class PostSeeder extends Seeder
 
             $post = Post::create([
                 'title' => $faker->sentence(6),
-                'content' => '<p>' . implode('</p><p>', $faker->paragraphs(5)) . '</p>',
+                'content' => '<p>'.implode('</p><p>', $faker->paragraphs(5)).'</p>',
                 'excerpt' => $faker->text(150),
                 'status' => $status,
                 'published_at' => $publishedAt,

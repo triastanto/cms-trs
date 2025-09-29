@@ -58,7 +58,7 @@ class Login extends Component
     /**
      * Validate the user's credentials.
      */
-    protected function validateCredentials(): User
+    protected function validateCredentials(): \Illuminate\Contracts\Auth\Authenticatable
     {
         $user = Auth::getProvider()->retrieveByCredentials(['email' => $this->email, 'password' => $this->password]);
 

@@ -1,9 +1,9 @@
 <?php
 
-use App\Models\Post;
-use App\Models\User;
 use App\Models\Category;
+use App\Models\Post;
 use App\Models\Tag;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -17,7 +17,7 @@ describe('Post Model', function () {
 
     describe('Basic Attributes', function () {
         it('has the correct fillable attributes', function () {
-            $post = new Post();
+            $post = new Post;
             $expectedFillable = [
                 'title',
                 'slug',
@@ -36,7 +36,7 @@ describe('Post Model', function () {
         });
 
         it('has the correct casts', function () {
-            $post = new Post();
+            $post = new Post;
             $expectedCasts = [
                 'published_at' => 'datetime',
                 'created_at' => 'datetime',
@@ -65,7 +65,7 @@ describe('Post Model', function () {
         it('belongs to many categories', function () {
             $post = Post::factory()->create();
             $categories = Category::factory()->count(3)->create();
-            
+
             $post->categories()->attach($categories->pluck('id'));
 
             expect($post->categories)->toHaveCount(3);
@@ -139,7 +139,6 @@ describe('Post Model', function () {
             expect($post->slug)->toBe('my-awesome-post');
         });
 
-
         it('uses slug as route key', function () {
             $post = Post::factory()->create(['slug' => 'my-post']);
 
@@ -149,8 +148,8 @@ describe('Post Model', function () {
 
     describe('Excerpt Generation', function () {
         it('generates excerpt from content when excerpt is empty', function () {
-            $content = 'This is a very long content that should be truncated to create an excerpt. ' . str_repeat('This is additional content. ', 20);
-            
+            $content = 'This is a very long content that should be truncated to create an excerpt. '.str_repeat('This is additional content. ', 20);
+
             $post = Post::factory()->create([
                 'content' => $content,
                 'excerpt' => null,
@@ -209,7 +208,7 @@ describe('Post Model', function () {
 
             $post->update([
                 'title' => 'Updated Title',
-                'slug' => 'my-custom-slug'
+                'slug' => 'my-custom-slug',
             ]);
 
             expect($post->slug)->toBe('my-custom-slug');
@@ -222,7 +221,7 @@ describe('Post Model', function () {
 
     describe('Excerpt Accessor Edge Cases', function () {
         it('handles content with HTML tags correctly', function () {
-            $content = '<p>This is <strong>HTML content</strong> with <em>various tags</em>.</p>' . str_repeat('<p>More content here.</p>', 10);
+            $content = '<p>This is <strong>HTML content</strong> with <em>various tags</em>.</p>'.str_repeat('<p>More content here.</p>', 10);
 
             $post = Post::factory()->create([
                 'content' => $content,
@@ -247,7 +246,7 @@ describe('Post Model', function () {
 
         it('handles null content gracefully', function () {
             $post = Post::factory()->create([
-                'content' => null,
+                'content' => '',
                 'excerpt' => null,
             ]);
 

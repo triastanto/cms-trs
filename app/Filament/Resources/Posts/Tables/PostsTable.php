@@ -2,18 +2,18 @@
 
 namespace App\Filament\Resources\Posts\Tables;
 
+use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Table;
+use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\BadgeColumn;
-use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\Filter;
-use Filament\Forms\Components\DatePicker;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\BulkAction;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
 
 class PostsTable
 {
@@ -28,25 +28,25 @@ class PostsTable
                     ->disk('public')
                     ->visibility('public')
                     ->getStateUsing(function ($record) {
-                        if (!$record->featured_image) {
+                        if (! $record->featured_image) {
                             return null;
                         }
-                        
+
                         // If it's already a full URL, return it
                         if (str_starts_with($record->featured_image, 'http')) {
                             return $record->featured_image;
                         }
-                        
+
                         // Otherwise, generate the storage URL
                         return \Illuminate\Support\Facades\Storage::disk('public')->url($record->featured_image);
                     }),
-                
+
                 TextColumn::make('title')
                     ->label('Title')
                     ->searchable()
                     ->sortable()
                     ->limit(50),
-                
+
                 TextColumn::make('user.name')
                     ->label('Author')
                     ->sortable()
@@ -67,7 +67,7 @@ class PostsTable
                     ->separator(',')
                     ->placeholder('No tags')
                     ->toggleable(),
-                
+
                 BadgeColumn::make('status')
                     ->label('Status')
                     ->colors([
@@ -76,19 +76,19 @@ class PostsTable
                         'danger' => 'archived',
                     ])
                     ->sortable(),
-                
+
                 TextColumn::make('published_at')
                     ->label('Published')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(),
-                
+
                 TextColumn::make('created_at')
                     ->label('Created')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                
+
                 TextColumn::make('updated_at')
                     ->label('Updated')
                     ->dateTime()
@@ -98,7 +98,7 @@ class PostsTable
             ->filters([
                 SelectFilter::make('status')
                     ->options(\App\Models\Post::getStatusOptions()),
-                
+
                 SelectFilter::make('user_id')
                     ->label('Author')
                     ->relationship('user', 'name'),
@@ -111,7 +111,7 @@ class PostsTable
                     ->label('Tags')
                     ->relationship('tags', 'name')
                     ->multiple(),
-                
+
                 Filter::make('published_at')
                     ->form([
                         DatePicker::make('published_from')

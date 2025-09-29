@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Tag;
 use App\Models\Post;
+use App\Models\Tag;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -13,7 +13,7 @@ describe('Tag Model', function () {
 
     describe('Basic Attributes', function () {
         it('has the correct fillable attributes', function () {
-            $tag = new Tag();
+            $tag = new Tag;
             $expectedFillable = [
                 'name',
                 'slug',
@@ -26,7 +26,7 @@ describe('Tag Model', function () {
         });
 
         it('has the correct casts', function () {
-            $tag = new Tag();
+            $tag = new Tag;
             $expectedCasts = [
                 'is_active' => 'boolean',
             ];
@@ -107,12 +107,12 @@ describe('Tag Model', function () {
 
     describe('Model Configuration', function () {
         it('uses HasFactory trait', function () {
-            $tag = new Tag();
+            $tag = new Tag;
             expect(in_array('Illuminate\Database\Eloquent\Factories\HasFactory', class_uses($tag)))->toBeTrue();
         });
 
         it('extends Model class', function () {
-            $tag = new Tag();
+            $tag = new Tag;
             expect($tag)->toBeInstanceOf(\Illuminate\Database\Eloquent\Model::class);
         });
     });

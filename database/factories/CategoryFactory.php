@@ -21,7 +21,7 @@ class CategoryFactory extends Factory
     {
         return [
             'name' => 'Test Category',
-            'slug' => 'test-category-' . rand(1000, 9999),
+            'slug' => 'test-category-'.rand(1000, 9999),
             'description' => 'This is a test category description.',
             'color' => '#3B82F6',
             'parent_id' => null,

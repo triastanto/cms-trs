@@ -2,14 +2,14 @@
 
 namespace App\Filament\Resources\Posts\Schemas;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Section;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 
 class PostForm
 {
@@ -25,33 +25,33 @@ class PostForm
                             ->maxLength(255)
                             ->live(onBlur: true)
                             ->columnSpanFull()
-                            ->afterStateUpdated(function (string $operation, $state, \Filament\Forms\Set $set) {
+                            ->afterStateUpdated(function (string $operation, $state, mixed $set) {
                                 if ($operation !== 'create') {
                                     return;
                                 }
                                 $set('slug', \Illuminate\Support\Str::slug($state));
                             }),
-                        
+
                         TextInput::make('slug')
                             ->required()
                             ->maxLength(255)
                             ->unique(\App\Models\Post::class, 'slug', ignoreRecord: true)
                             ->rules(['alpha_dash'])
                             ->columnSpanFull(),
-                        
+
                         Select::make('status')
                             ->options(\App\Models\Post::getStatusOptions())
                             ->default('draft')
                             ->required()
                             ->columnSpanFull(),
-                        
+
                         DateTimePicker::make('published_at')
                             ->label('Publish Date')
                             ->nullable()
                             ->columnSpanFull(),
                     ])
                     ->collapsible(),
-                
+
                 Section::make('Author')
                     ->schema([
                         Select::make('user_id')
@@ -82,7 +82,7 @@ class PostForm
                             ->columnSpanFull(),
                     ])
                     ->collapsible(),
-                
+
                 Section::make('Content')
                     ->schema([
                         RichEditor::make('content')
@@ -104,7 +104,7 @@ class PostForm
                                 'underline',
                                 'undo',
                             ]),
-                        
+
                         Textarea::make('excerpt')
                             ->label('Excerpt')
                             ->helperText('Brief description of the post. If left empty, it will be generated from content.')
@@ -113,7 +113,7 @@ class PostForm
                             ->columnSpanFull(),
                     ])
                     ->collapsible(),
-                
+
                 Section::make('Media')
                     ->schema([
                         FileUpload::make('featured_image')
@@ -128,7 +128,7 @@ class PostForm
                             ->columnSpanFull(),
                     ])
                     ->collapsible(),
-                
+
                 Section::make('SEO')
                     ->schema([
                         TextInput::make('meta_title')
@@ -136,7 +136,7 @@ class PostForm
                             ->maxLength(60)
                             ->helperText('Recommended: 50-60 characters')
                             ->columnSpanFull(),
-                        
+
                         Textarea::make('meta_description')
                             ->label('Meta Description')
                             ->maxLength(160)

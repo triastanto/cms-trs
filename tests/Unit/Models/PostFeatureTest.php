@@ -5,7 +5,7 @@ use App\Models\Post;
 describe('Post Model - Feature Tests', function () {
     describe('Basic Attributes', function () {
         it('has the correct fillable attributes', function () {
-            $post = new Post();
+            $post = new Post;
             $expectedFillable = [
                 'title',
                 'slug',
@@ -24,7 +24,7 @@ describe('Post Model - Feature Tests', function () {
         });
 
         it('has the correct casts', function () {
-            $post = new Post();
+            $post = new Post;
             $expectedCasts = [
                 'published_at' => 'datetime',
             ];
@@ -47,19 +47,19 @@ describe('Post Model - Feature Tests', function () {
 
     describe('Route Key', function () {
         it('uses slug as route key', function () {
-            $post = new Post();
+            $post = new Post;
             expect($post->getRouteKeyName())->toBe('slug');
         });
     });
 
     describe('Relationships', function () {
         it('has user relationship method', function () {
-            $post = new Post();
+            $post = new Post;
             expect(method_exists($post, 'user'))->toBeTrue();
         });
 
         it('has category relationship method', function () {
-            $post = new Post();
+            $post = new Post;
             expect(method_exists($post, 'category'))->toBeTrue();
         });
 
@@ -67,7 +67,7 @@ describe('Post Model - Feature Tests', function () {
         // The many-to-many relationship with categories is not implemented yet
 
         it('has tags relationship method', function () {
-            $post = new Post();
+            $post = new Post;
             expect(method_exists($post, 'tags'))->toBeTrue();
         });
     });
@@ -78,24 +78,24 @@ describe('Post Model - Feature Tests', function () {
         });
 
         it('has scopePublished method', function () {
-            $post = new Post();
+            $post = new Post;
             expect(method_exists($post, 'scopePublished'))->toBeTrue();
         });
 
         it('has scopeDraft method', function () {
-            $post = new Post();
+            $post = new Post;
             expect(method_exists($post, 'scopeDraft'))->toBeTrue();
         });
     });
 
     describe('Model Configuration', function () {
         it('uses HasFactory trait', function () {
-            $post = new Post();
+            $post = new Post;
             expect(in_array('Illuminate\Database\Eloquent\Factories\HasFactory', class_uses($post)))->toBeTrue();
         });
 
         it('extends Model class', function () {
-            $post = new Post();
+            $post = new Post;
             expect($post)->toBeInstanceOf(\Illuminate\Database\Eloquent\Model::class);
         });
     });

@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\User;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -13,7 +13,7 @@ describe('User Model', function () {
 
     describe('Basic Attributes', function () {
         it('has the correct fillable attributes', function () {
-            $user = new User();
+            $user = new User;
             $expectedFillable = [
                 'name',
                 'email',
@@ -24,7 +24,7 @@ describe('User Model', function () {
         });
 
         it('has the correct hidden attributes', function () {
-            $user = new User();
+            $user = new User;
             $expectedHidden = [
                 'password',
                 'remember_token',
@@ -34,7 +34,7 @@ describe('User Model', function () {
         });
 
         it('has the correct casts', function () {
-            $user = new User();
+            $user = new User;
             $casts = $user->getCasts();
 
             expect($casts)->toHaveKey('email_verified_at');
@@ -81,27 +81,27 @@ describe('User Model', function () {
 
     describe('Model Configuration', function () {
         it('uses HasFactory trait', function () {
-            $user = new User();
+            $user = new User;
             expect(in_array('Illuminate\Database\Eloquent\Factories\HasFactory', class_uses($user)))->toBeTrue();
         });
 
         it('uses Notifiable trait', function () {
-            $user = new User();
+            $user = new User;
             expect(in_array('Illuminate\Notifications\Notifiable', class_uses($user)))->toBeTrue();
         });
 
         it('uses TwoFactorAuthenticatable trait', function () {
-            $user = new User();
+            $user = new User;
             expect(in_array('Laravel\Fortify\TwoFactorAuthenticatable', class_uses($user)))->toBeTrue();
         });
 
         it('implements FilamentUser interface', function () {
-            $user = new User();
+            $user = new User;
             expect($user)->toBeInstanceOf(\Filament\Models\Contracts\FilamentUser::class);
         });
 
         it('extends Authenticatable class', function () {
-            $user = new User();
+            $user = new User;
             expect($user)->toBeInstanceOf(\Illuminate\Foundation\Auth\User::class);
         });
     });

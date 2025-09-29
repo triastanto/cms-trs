@@ -42,9 +42,9 @@ class DatabaseSeeder extends Seeder
         $this->command->info('🎉 Database seeding completed successfully!');
         $this->command->info('');
         $this->command->info('📊 Summary:');
-        $this->command->info('   Users: ' . User::count());
-        $this->command->info('   Categories: ' . \App\Models\Category::count());
-        $this->command->info('   Tags: ' . \App\Models\Tag::count());
-        $this->command->info('   Posts: ' . \App\Models\Post::count());
+        $this->command->info('   Users: '.User::count());
+        $this->command->info('   Categories: '.\App\Models\Category::count());
+        $this->command->info('   Tags: '.\App\Models\Tag::count());
+        $this->command->info('   Posts: '.\App\Models\Post::count());
     }
 }

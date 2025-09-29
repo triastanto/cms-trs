@@ -1,9 +1,6 @@
 <?php
 
 use App\Models\Post;
-use App\Models\User;
-use App\Models\Category;
-use App\Models\Tag;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -11,7 +8,7 @@ uses(RefreshDatabase::class);
 describe('Post Model - Simple Tests', function () {
     describe('Basic Attributes', function () {
         it('has the correct fillable attributes', function () {
-            $post = new Post();
+            $post = new Post;
             $expectedFillable = [
                 'title',
                 'slug',
@@ -30,7 +27,7 @@ describe('Post Model - Simple Tests', function () {
         });
 
         it('has the correct casts', function () {
-            $post = new Post();
+            $post = new Post;
             $expectedCasts = [
                 'published_at' => 'datetime',
                 'created_at' => 'datetime',
@@ -55,7 +52,7 @@ describe('Post Model - Simple Tests', function () {
 
     describe('Route Key', function () {
         it('uses slug as route key', function () {
-            $post = new Post();
+            $post = new Post;
             expect($post->getRouteKeyName())->toBe('slug');
         });
     });

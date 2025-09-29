@@ -8,7 +8,7 @@ uses(RefreshDatabase::class);
 describe('Tag Model - Simple Tests', function () {
     describe('Basic Attributes', function () {
         it('has the correct fillable attributes', function () {
-            $tag = new Tag();
+            $tag = new Tag;
             $expectedFillable = [
                 'name',
                 'slug',
@@ -21,7 +21,7 @@ describe('Tag Model - Simple Tests', function () {
         });
 
         it('has the correct casts', function () {
-            $tag = new Tag();
+            $tag = new Tag;
             $expectedCasts = [
                 'is_active' => 'boolean',
             ];
@@ -32,7 +32,7 @@ describe('Tag Model - Simple Tests', function () {
 
     describe('Route Key', function () {
         it('uses slug as route key', function () {
-            $tag = new Tag();
+            $tag = new Tag;
             expect($tag->getRouteKeyName())->toBe('slug');
         });
     });

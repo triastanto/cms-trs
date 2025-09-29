@@ -8,7 +8,7 @@ uses(RefreshDatabase::class);
 describe('Category Model - Simple Tests', function () {
     describe('Basic Attributes', function () {
         it('has the correct fillable attributes', function () {
-            $category = new Category();
+            $category = new Category;
             $expectedFillable = [
                 'name',
                 'slug',
@@ -23,7 +23,7 @@ describe('Category Model - Simple Tests', function () {
         });
 
         it('has the correct casts', function () {
-            $category = new Category();
+            $category = new Category;
             $expectedCasts = [
                 'is_active' => 'boolean',
                 'sort_order' => 'integer',
@@ -35,7 +35,7 @@ describe('Category Model - Simple Tests', function () {
 
     describe('Route Key', function () {
         it('uses slug as route key', function () {
-            $category = new Category();
+            $category = new Category;
             expect($category->getRouteKeyName())->toBe('slug');
         });
     });
