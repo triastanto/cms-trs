@@ -67,6 +67,14 @@ class Post extends Model
     }
 
     /**
+     * Get the additional categories associated with the post.
+     */
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class);
+    }
+
+    /**
      * Get the post's status options.
      */
     public static function getStatusOptions(): array
@@ -91,6 +99,7 @@ class Post extends Model
             }
         });
 
+        // Slug updates are now optional - only update if slug is empty
         static::updating(function ($post) {
             if ($post->isDirty('title') && empty($post->slug)) {
                 $post->slug = Str::slug($post->title);
@@ -134,4 +143,5 @@ class Post extends Model
 
         return Str::limit(strip_tags($this->content), 150);
     }
+
 }

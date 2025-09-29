@@ -14,6 +14,8 @@ describe('Category Model - Simple Tests', function () {
                 'slug',
                 'description',
                 'color',
+                'parent_id',
+                'sort_order',
                 'is_active',
             ];
 
@@ -24,6 +26,7 @@ describe('Category Model - Simple Tests', function () {
             $category = new Category();
             $expectedCasts = [
                 'is_active' => 'boolean',
+                'sort_order' => 'integer',
             ];
 
             expect($category->getCasts())->toMatchArray($expectedCasts);

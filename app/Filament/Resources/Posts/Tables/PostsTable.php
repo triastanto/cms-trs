@@ -24,7 +24,7 @@ class PostsTable
                 ImageColumn::make('featured_image')
                     ->label('Image')
                     ->circular()
-                    ->size(40)
+                    ->imageSize(40)
                     ->disk('public')
                     ->visibility('public')
                     ->getStateUsing(function ($record) {
