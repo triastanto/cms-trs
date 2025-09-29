@@ -51,6 +51,22 @@ class PostsTable
                     ->label('Author')
                     ->sortable()
                     ->searchable(),
+
+                TextColumn::make('category.name')
+                    ->label('Category')
+                    ->sortable()
+                    ->searchable()
+                    ->badge()
+                    ->color('info')
+                    ->placeholder('No category'),
+
+                TextColumn::make('tags.name')
+                    ->label('Tags')
+                    ->badge()
+                    ->color('primary')
+                    ->separator(',')
+                    ->placeholder('No tags')
+                    ->toggleable(),
                 
                 BadgeColumn::make('status')
                     ->label('Status')
@@ -86,6 +102,15 @@ class PostsTable
                 SelectFilter::make('user_id')
                     ->label('Author')
                     ->relationship('user', 'name'),
+
+                SelectFilter::make('category_id')
+                    ->label('Category')
+                    ->relationship('category', 'name'),
+
+                SelectFilter::make('tags')
+                    ->label('Tags')
+                    ->relationship('tags', 'name')
+                    ->multiple(),
                 
                 Filter::make('published_at')
                     ->form([

@@ -62,6 +62,26 @@ class PostForm
                             ->columnSpanFull(),
                     ])
                     ->collapsible(),
+
+                Section::make('Categorization')
+                    ->schema([
+                        Select::make('category_id')
+                            ->label('Category')
+                            ->relationship('category', 'name', fn ($query) => $query->where('is_active', true))
+                            ->searchable()
+                            ->preload()
+                            ->nullable()
+                            ->columnSpanFull(),
+
+                        Select::make('tags')
+                            ->label('Tags')
+                            ->relationship('tags', 'name', fn ($query) => $query->where('is_active', true))
+                            ->multiple()
+                            ->searchable()
+                            ->preload()
+                            ->columnSpanFull(),
+                    ])
+                    ->collapsible(),
                 
                 Section::make('Content')
                     ->schema([
