@@ -163,10 +163,13 @@ class MenuItemResource extends Resource
      */
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()
+        /** @var Builder<MenuItem> $query */
+        $query = parent::getEloquentQuery()
             ->with(['menu', 'parent'])
             ->orderByRaw('CASE WHEN parent_id IS NULL THEN id ELSE parent_id END')
             ->orderByRaw('CASE WHEN parent_id IS NULL THEN 0 ELSE 1 END')
             ->orderBy('sort_order', 'asc');
+
+        return $query;
     }
 }

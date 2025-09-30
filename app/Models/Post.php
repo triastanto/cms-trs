@@ -7,10 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Post extends Model
+class Post extends Model implements HasMedia
 {
     use HasFactory;
+    use InteractsWithMedia;
 
     /**
      * The attributes that are mass assignable.
@@ -23,7 +26,6 @@ class Post extends Model
         'content',
         'excerpt',
         'status',
-        'featured_image',
         'meta_title',
         'meta_description',
         'published_at',
@@ -146,5 +148,35 @@ class Post extends Model
         }
 
         return Str::limit(strip_tags($this->content), 150);
+    }
+
+    /**
+     * Register media collections.
+     */
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('featured_image')
+            ->useDisk('public')
+            ->singleFile()
+            ->registerMediaConversions(function () {
+                $this->addMediaConversion('thumb')
+                    ->width(368)
+                    ->height(232)
+                    ->sharpen(10);
+
+                $this->addMediaConversion('preview')
+                    ->width(800)
+                    ->height(600)
+                    ->sharpen(10);
+            });
+
+        $this->addMediaCollection('gallery')
+            ->useDisk('public')
+            ->registerMediaConversions(function () {
+                $this->addMediaConversion('thumb')
+                    ->width(368)
+                    ->height(232)
+                    ->sharpen(10);
+            });
     }
 }

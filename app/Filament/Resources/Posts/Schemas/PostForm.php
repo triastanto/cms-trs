@@ -3,9 +3,9 @@
 namespace App\Filament\Resources\Posts\Schemas;
 
 use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
@@ -116,15 +116,31 @@ class PostForm
 
                 Section::make('Media')
                     ->schema([
-                        FileUpload::make('featured_image')
+                        SpatieMediaLibraryFileUpload::make('featured_image')
                             ->label('Featured Image')
+                            ->collection('featured_image')
                             ->image()
-                            ->directory('posts/featured-images')
-                            ->disk('public')
                             ->required(false)
                             ->maxSize(2048)
                             ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
-                            ->helperText('Click to browse or drag and drop an image file')
+                            ->helperText('Click to browse or drag and drop an image file. Thumbnails will be automatically generated.')
+                            ->imageEditor()
+                            ->imageEditorAspectRatios([
+                                '16:9',
+                                '4:3',
+                                '1:1',
+                            ])
+                            ->columnSpanFull(),
+
+                        SpatieMediaLibraryFileUpload::make('gallery')
+                            ->label('Gallery Images')
+                            ->collection('gallery')
+                            ->image()
+                            ->multiple()
+                            ->reorderable()
+                            ->maxSize(2048)
+                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                            ->helperText('Upload multiple images for a gallery')
                             ->columnSpanFull(),
                     ])
                     ->collapsible(),

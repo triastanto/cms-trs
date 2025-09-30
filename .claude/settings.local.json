@@ -10,7 +10,14 @@
       "Bash(composer require:*)",
       "Bash(git checkout:*)",
       "Bash(cat:*)",
-      "Bash(vendor/bin/pest:*)"
+      "Bash(vendor/bin/pest:*)",
+      "Bash(composer:*)",
+      "Bash(ping:*)",
+      "Read(//c/php-8.3.22-Win32-vs16-x64/**)",
+      "Bash(if [ -d \"storage/app/private\" ])",
+      "Bash(then cp -r storage/app/private/* storage/app/public/)",
+      "Bash(else echo \"No private directory\")",
+      "Bash(fi)"
     ],
     "deny": [],
     "ask": []

@@ -9,7 +9,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Columns\BadgeColumn;
-use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
@@ -21,25 +21,12 @@ class PostsTable
     {
         return $table
             ->columns([
-                ImageColumn::make('featured_image')
+                SpatieMediaLibraryImageColumn::make('featured_image')
                     ->label('Image')
+                    ->collection('featured_image')
+                    ->conversion('thumb')
                     ->circular()
-                    ->imageSize(40)
-                    ->disk('public')
-                    ->visibility('public')
-                    ->getStateUsing(function ($record) {
-                        if (! $record->featured_image) {
-                            return null;
-                        }
-
-                        // If it's already a full URL, return it
-                        if (str_starts_with($record->featured_image, 'http')) {
-                            return $record->featured_image;
-                        }
-
-                        // Otherwise, generate the storage URL
-                        return \Illuminate\Support\Facades\Storage::disk('public')->url($record->featured_image);
-                    }),
+                    ->size(40),
 
                 TextColumn::make('title')
                     ->label('Title')
