@@ -9,4 +9,3 @@ class CreateMenuItem extends CreateRecord
 {
     protected static string $resource = MenuItemResource::class;
 }
-

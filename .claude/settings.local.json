@@ -6,7 +6,11 @@
       "Bash(php:*)",
       "Bash(find:*)",
       "Bash(composer show:*)",
-      "Bash(vendor/bin/phpstan analyse:*)"
+      "Bash(vendor/bin/phpstan analyse:*)",
+      "Bash(composer require:*)",
+      "Bash(git checkout:*)",
+      "Bash(cat:*)",
+      "Bash(vendor/bin/pest:*)"
     ],
     "deny": [],
     "ask": []

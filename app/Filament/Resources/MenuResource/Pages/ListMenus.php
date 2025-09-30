@@ -17,4 +17,3 @@ class ListMenus extends ListRecords
         ];
     }
 }
-

@@ -17,4 +17,3 @@ class EditMenu extends EditRecord
         ];
     }
 }
-

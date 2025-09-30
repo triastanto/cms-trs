@@ -20,7 +20,11 @@ class MenuItemResource extends Resource
 {
     protected static ?string $model = MenuItem::class;
 
-    protected static ?int $navigationSort = 2;
+    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-list-bullet';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Content Management';
+
+    protected static ?int $navigationSort = 5;
 
     public static function form(Schema $schema): Schema
     {
@@ -82,14 +86,16 @@ class MenuItemResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('menu.name')
-                    ->label('Menu')
-                    ->searchable()
-                    ->sortable(),
-
                 Tables\Columns\TextColumn::make('title')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->description(function (MenuItem $record): string {
+                        if ($record->parent && $record->parent instanceof MenuItem) {
+                            return '↳ Child of: '.$record->parent->title;
+                        }
+
+                        return 'Root level';
+                    }),
 
                 Tables\Columns\TextColumn::make('url')
                     ->limit(30),
@@ -129,7 +135,13 @@ class MenuItemResource extends Resource
                 ]),
             ])
             ->defaultSort('sort_order', 'asc')
-            ->reorderable('sort_order');
+            ->groups([
+                Tables\Grouping\Group::make('menu.name')
+                    ->label('Menu')
+                    ->collapsible()
+                    ->titlePrefixedWithLabel(false),
+            ])
+            ->defaultGroup('menu.name');
     }
 
     public static function getRelations(): array
@@ -146,9 +158,15 @@ class MenuItemResource extends Resource
         ];
     }
 
+    /**
+     * @return Builder<MenuItem>
+     */
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
-            ->with(['menu', 'parent']);
+            ->with(['menu', 'parent'])
+            ->orderByRaw('CASE WHEN parent_id IS NULL THEN id ELSE parent_id END')
+            ->orderByRaw('CASE WHEN parent_id IS NULL THEN 0 ELSE 1 END')
+            ->orderBy('sort_order', 'asc');
     }
 }

@@ -18,7 +18,11 @@ class MenuResource extends Resource
 {
     protected static ?string $model = Menu::class;
 
-    protected static ?int $navigationSort = 1;
+    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-bars-3';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Content Management';
+
+    protected static ?int $navigationSort = 4;
 
     public static function form(Schema $schema): Schema
     {

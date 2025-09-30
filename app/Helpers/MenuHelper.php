@@ -241,4 +241,3 @@ class MenuHelper
         $item->save();
     }
 }
-
