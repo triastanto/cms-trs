@@ -141,7 +141,7 @@ class Post extends Model
             return $value;
         }
 
-        if (is_null($this->content)) {
+        if (! $this->content) {
             return '';
         }
 

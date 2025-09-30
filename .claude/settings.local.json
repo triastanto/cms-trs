@@ -4,7 +4,9 @@
       "Bash(php artisan migrate:*)",
       "Bash(php artisan:*)",
       "Bash(php:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(composer show:*)",
+      "Bash(vendor/bin/phpstan analyse:*)"
     ],
     "deny": [],
     "ask": []
