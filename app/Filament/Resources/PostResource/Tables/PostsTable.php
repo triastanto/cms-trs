@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Posts\Tables;
+namespace App\Filament\Resources\PostResource\Tables;
 
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;

@@ -12,7 +12,6 @@ describe('Post Model - Feature Tests', function () {
                 'content',
                 'excerpt',
                 'status',
-                'featured_image',
                 'meta_title',
                 'meta_description',
                 'published_at',

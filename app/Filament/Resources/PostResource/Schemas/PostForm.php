@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Posts\Schemas;
+namespace App\Filament\Resources\PostResource\Schemas;
 
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\RichEditor;

@@ -17,7 +17,9 @@
       "Bash(if [ -d \"storage/app/private\" ])",
       "Bash(then cp -r storage/app/private/* storage/app/public/)",
       "Bash(else echo \"No private directory\")",
-      "Bash(fi)"
+      "Bash(fi)",
+      "Bash(git restore:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []

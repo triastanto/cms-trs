@@ -99,8 +99,8 @@ class MediaResource extends Resource
                         }
 
                         $resourceClass = match (class_basename($model)) {
-                            'Post' => \App\Filament\Resources\Posts\PostResource::class,
-                            'Category' => \App\Filament\Resources\Categories\CategoryResource::class,
+                            'Post' => \App\Filament\Resources\PostResource::class,
+                            'Category' => \App\Filament\Resources\CategoryResource::class,
                             default => null,
                         };
 

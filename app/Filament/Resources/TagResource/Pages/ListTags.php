@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\Tags\Pages;
+namespace App\Filament\Resources\TagResource\Pages;
 
-use App\Filament\Resources\Tags\TagResource;
+use App\Filament\Resources\TagResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 

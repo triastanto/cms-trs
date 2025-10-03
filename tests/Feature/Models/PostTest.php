@@ -24,7 +24,6 @@ describe('Post Model', function () {
                 'content',
                 'excerpt',
                 'status',
-                'featured_image',
                 'meta_title',
                 'meta_description',
                 'published_at',

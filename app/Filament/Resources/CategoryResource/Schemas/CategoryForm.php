@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Tags\Schemas;
+namespace App\Filament\Resources\CategoryResource\Schemas;
 
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Textarea;
@@ -9,14 +9,14 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
-class TagForm
+class CategoryForm
 {
     public static function configure(Schema $schema): Schema
     {
         return $schema
             ->columns(2)
             ->components([
-                Section::make('Tag Details')
+                Section::make('Category Details')
                     ->schema([
                         TextInput::make('name')
                             ->required()
@@ -32,7 +32,7 @@ class TagForm
                         TextInput::make('slug')
                             ->required()
                             ->maxLength(255)
-                            ->unique(\App\Models\Tag::class, 'slug', ignoreRecord: true)
+                            ->unique(\App\Models\Category::class, 'slug', ignoreRecord: true)
                             ->rules(['alpha_dash'])
                             ->helperText('URL friendly version of the name'),
                     ])
@@ -50,13 +50,13 @@ class TagForm
                 Section::make('Settings')
                     ->schema([
                         ColorPicker::make('color')
-                            ->helperText('Color used for tag display')
+                            ->helperText('Color used for category display')
                             ->nullable(),
 
                         Toggle::make('is_active')
                             ->label('Active')
                             ->default(true)
-                            ->helperText('Only active tags are shown in post forms'),
+                            ->helperText('Only active categories are shown in post forms'),
                     ])
                     ->columns(2)
                     ->collapsible(),

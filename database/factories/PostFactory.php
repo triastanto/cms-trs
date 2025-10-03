@@ -24,7 +24,6 @@ class PostFactory extends Factory
             'content' => fake()->paragraphs(rand(5, 15), true),
             'excerpt' => fake()->sentence(rand(10, 20)),
             'status' => fake()->randomElement(['draft', 'published', 'archived']),
-            'featured_image' => fake()->optional(0.7)->imageUrl(800, 600, 'nature'),
             'meta_title' => fake()->optional(0.8)->sentence(rand(5, 10)),
             'meta_description' => fake()->optional(0.8)->sentence(rand(15, 25)),
             'published_at' => fake()->optional(0.6)->dateTimeBetween('-1 year', 'now'),

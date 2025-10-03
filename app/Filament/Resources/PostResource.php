@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Filament\Resources\Posts;
+namespace App\Filament\Resources;
 
-use App\Filament\Resources\Posts\Pages\CreatePost;
-use App\Filament\Resources\Posts\Pages\EditPost;
-use App\Filament\Resources\Posts\Pages\ListPosts;
-use App\Filament\Resources\Posts\Schemas\PostForm;
-use App\Filament\Resources\Posts\Tables\PostsTable;
+use App\Filament\Resources\PostResource\Pages\CreatePost;
+use App\Filament\Resources\PostResource\Pages\EditPost;
+use App\Filament\Resources\PostResource\Pages\ListPosts;
+use App\Filament\Resources\PostResource\Schemas\PostForm;
+use App\Filament\Resources\PostResource\Tables\PostsTable;
 use App\Models\Post;
 use BackedEnum;
 use Filament\Resources\Resource;
