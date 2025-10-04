@@ -19,7 +19,8 @@
       "Bash(else echo \"No private directory\")",
       "Bash(fi)",
       "Bash(git restore:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(chmod:*)"
     ],
     "deny": [],
     "ask": []
