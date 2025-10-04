@@ -23,11 +23,12 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Fortify::twoFactorChallengeView(fn () => view('livewire.auth.two-factor-challenge'));
-        Fortify::confirmPasswordView(fn () => view('livewire.auth.confirm-password'));
+        // Admin authentication configuration
+        // Fortify provides the authentication backend for Filament
 
-        RateLimiter::for('two-factor', function (Request $request) {
-            return Limit::perMinute(5)->by($request->session()->get('login.id'));
+        // Rate limiting for admin authentication
+        RateLimiter::for('login', function (Request $request) {
+            return Limit::perMinute(5)->by($request->ip());
         });
     }
 }

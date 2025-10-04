@@ -90,10 +90,7 @@ describe('User Model', function () {
             expect(in_array('Illuminate\Notifications\Notifiable', class_uses($user)))->toBeTrue();
         });
 
-        it('uses TwoFactorAuthenticatable trait', function () {
-            $user = new User;
-            expect(in_array('Laravel\Fortify\TwoFactorAuthenticatable', class_uses($user)))->toBeTrue();
-        });
+        // TwoFactorAuthenticatable trait test removed - 2FA feature disabled
 
         it('implements FilamentUser interface', function () {
             $user = new User;

@@ -2,19 +2,22 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+// use Laravel\Fortify\TwoFactorAuthenticatable; // 2FA removed
 use Illuminate\Support\Str;
-use Laravel\Fortify\TwoFactorAuthenticatable;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable implements FilamentUser, HasMedia, MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, TwoFactorAuthenticatable;
+    use HasFactory, InteractsWithMedia, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -72,9 +75,66 @@ class User extends Authenticatable implements FilamentUser
 
     /**
      * Determine if the user can access the given Filament panel.
+     * For admin-only CMS, all authenticated users can access the admin panel.
      */
     public function canAccessPanel(Panel $panel): bool
     {
-        return true;
+        // Only allow access to admin panel for authenticated users
+        return $this->email_verified_at !== null;
+    }
+
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class, 'user_roles');
+    }
+
+    public function hasRole(string $role): bool
+    {
+        return $this->roles()->where('slug', $role)->exists();
+    }
+
+    public function hasPermission(string $permission): bool
+    {
+        // Super admin has all permissions
+        if ($this->hasRole('super-admin')) {
+            return true;
+        }
+
+        // Check if user has permission through any of their roles
+        return $this->roles()->whereJsonContains('permissions', $permission)->exists();
+    }
+
+    public function assignRole(string $role): void
+    {
+        $roleModel = Role::where('slug', $role)->first();
+        if ($roleModel && ! $this->hasRole($role)) {
+            $this->roles()->attach($roleModel);
+        }
+    }
+
+    public function removeRole(string $role): void
+    {
+        $roleModel = Role::where('slug', $role)->first();
+        if ($roleModel) {
+            $this->roles()->detach($roleModel);
+        }
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('avatar')
+            ->useDisk('public')
+            ->singleFile()
+            ->registerMediaConversions(function () {
+                $this->addMediaConversion('thumb')
+                    ->width(100)
+                    ->height(100)
+                    ->sharpen(10);
+
+                $this->addMediaConversion('preview')
+                    ->width(300)
+                    ->height(300)
+                    ->sharpen(10);
+            });
     }
 }

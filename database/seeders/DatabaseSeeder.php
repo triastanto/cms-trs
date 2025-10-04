@@ -14,32 +14,54 @@ class DatabaseSeeder extends Seeder
     {
         $this->command->info('🌱 Starting database seeding...');
 
-        // Step 1: Create users first
+        // Step 1: Create roles first
+        $this->command->info('🔐 Creating roles...');
+        $this->call(RoleSeeder::class);
+        $this->command->info('✅ Roles created successfully');
+
+        // Step 2: Create users
         $this->command->info('👤 Creating users...');
         $admin = User::factory()->create([
             'name' => 'Admin User',
             'email' => 'admin@example.com',
         ]);
 
-        User::factory(5)->create();
+        $contentManager = User::factory()->create([
+            'name' => 'Content Manager',
+            'email' => 'content@example.com',
+        ]);
+
+        $otherUsers = User::factory(4)->create();
         $this->command->info('✅ Users created successfully');
 
-        // Step 2: Seed categories
+        // Step 3: Assign roles to users
+        $this->command->info('👥 Assigning roles to users...');
+        $admin->assignRole('super-admin');
+        $contentManager->assignRole('content-manager');
+
+        // Assign content-manager role to 2 other users
+        $otherUsers->take(2)->each(function ($user) {
+            $user->assignRole('content-manager');
+        });
+
+        $this->command->info('✅ Roles assigned successfully');
+
+        // Step 4: Seed categories
         $this->command->info('📂 Seeding categories...');
         $this->call(CategorySeeder::class);
         $this->command->info('✅ Categories seeded successfully');
 
-        // Step 3: Seed tags
+        // Step 5: Seed tags
         $this->command->info('🏷️ Seeding tags...');
         $this->call(TagSeeder::class);
         $this->command->info('✅ Tags seeded successfully');
 
-        // Step 4: Seed posts with relationships
+        // Step 6: Seed posts with relationships
         $this->command->info('📝 Seeding posts with categories and tags...');
         $this->call(PostSeeder::class);
         $this->command->info('✅ Posts seeded successfully');
 
-        // Step 5: Seed menus
+        // Step 7: Seed menus
         $this->command->info('🍽️ Seeding menus...');
         $this->call(MenuSeeder::class);
         $this->command->info('✅ Menus seeded successfully');

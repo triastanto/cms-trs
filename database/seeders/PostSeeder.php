@@ -148,7 +148,6 @@ class PostSeeder extends Seeder
                 'excerpt' => $postData['excerpt'],
                 'status' => $postData['status'],
                 'published_at' => $postData['published_at'],
-                'featured_image' => null, // You can add sample images if needed
                 'meta_title' => $postData['title'],
                 'meta_description' => $postData['excerpt'],
                 'user_id' => $users->random()->id,
@@ -180,7 +179,6 @@ class PostSeeder extends Seeder
                 'excerpt' => $faker->text(150),
                 'status' => $status,
                 'published_at' => $publishedAt,
-                'featured_image' => null,
                 'meta_title' => $faker->sentence(4),
                 'meta_description' => $faker->text(160),
                 'user_id' => $users->random()->id,
