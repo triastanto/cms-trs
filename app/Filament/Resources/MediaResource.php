@@ -34,6 +34,12 @@ class MediaResource extends Resource
 
     protected static ?string $pluralLabel = 'Media';
 
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->with(['model']);
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema

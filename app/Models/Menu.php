@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Cache;
 
 class Menu extends Model
 {
@@ -30,6 +31,26 @@ class Menu extends Model
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    /**
+     * Boot the model.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saved(function ($menu) {
+            if ($menu->location) {
+                Cache::forget("menu.location.{$menu->location}");
+            }
+        });
+
+        static::deleted(function ($menu) {
+            if ($menu->location) {
+                Cache::forget("menu.location.{$menu->location}");
+            }
+        });
+    }
 
     /**
      * Get the menu items for the menu.

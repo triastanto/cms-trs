@@ -103,14 +103,21 @@ class Category extends Model implements HasMedia
      */
     public function registerMediaCollections(): void
     {
+        // Check if media conversions should be queued (production only)
+        $shouldQueue = config('performance.queue.media_conversions', false);
+
         $this->addMediaCollection('thumbnail')
             ->useDisk('public')
             ->singleFile()
-            ->registerMediaConversions(function () {
-                $this->addMediaConversion('thumb')
+            ->registerMediaConversions(function () use ($shouldQueue) {
+                $conversion = $this->addMediaConversion('thumb')
                     ->width(200)
                     ->height(200)
                     ->sharpen(10);
+
+                if ($shouldQueue) {
+                    $conversion->queued();
+                }
             });
     }
 }

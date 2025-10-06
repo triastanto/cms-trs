@@ -5,6 +5,7 @@ namespace App\Helpers;
 use App\Models\Menu;
 use App\Models\MenuItem;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 
 class MenuHelper
 {
@@ -13,9 +14,14 @@ class MenuHelper
      */
     public static function getMenuByLocation(string $location): ?Menu
     {
-        return Menu::with(['menuItems' => function ($query) {
-            $query->active()->orderBy('sort_order');
-        }])->where('location', $location)->where('is_active', true)->first();
+        // Use environment-aware cache TTL (1h in production, 5min in dev)
+        $ttl = config('performance.cache.menu_ttl', 3600);
+
+        return Cache::remember("menu.location.{$location}", $ttl, function () use ($location) {
+            return Menu::with(['menuItems' => function ($query) {
+                $query->active()->orderBy('sort_order');
+            }])->where('location', $location)->where('is_active', true)->first();
+        });
     }
 
     /**

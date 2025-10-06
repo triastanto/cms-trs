@@ -22,56 +22,68 @@ class SettingsServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Bind settings to application configuration
+        // Only load settings for web requests, not console or API
+        if ($this->app->runningInConsole() || $this->app->runningUnitTests()) {
+            return;
+        }
+
+        // Lazy-load settings only when needed (on actual web requests)
         $this->app->booted(function () {
-            // Check if settings table exists to avoid errors during testing
-            if (! \Schema::hasTable('settings')) {
+            // Skip for API routes to improve API performance
+            if (request()->is('api/*')) {
                 return;
+            }
+
+            $this->loadCriticalSettings();
+        });
+    }
+
+    /**
+     * Load only critical settings that affect application behavior.
+     */
+    private function loadCriticalSettings(): void
+    {
+        // Use environment-aware cache TTL (24h in production, 5min in dev)
+        $ttl = config('performance.cache.critical_settings_ttl', 86400);
+
+        $criticalSettings = \Cache::remember('critical_settings', $ttl, function () {
+            // Check if settings table exists
+            if (! \Schema::hasTable('settings')) {
+                return [];
             }
 
             $settings = app(SettingsService::class);
 
-            // Override app configuration with settings
-            if ($settings->has('site_name')) {
-                config(['app.name' => $settings->get('site_name')]);
-            }
-
-            if ($settings->has('timezone')) {
-                config(['app.timezone' => $settings->get('timezone')]);
-            }
-
-            if ($settings->has('locale')) {
-                config(['app.locale' => $settings->get('locale')]);
-            }
-
-            // Email configuration
-            if ($settings->has('email_from_name')) {
-                config(['mail.from.name' => $settings->get('email_from_name')]);
-            }
-
-            if ($settings->has('email_from_address')) {
-                config(['mail.from.address' => $settings->get('email_from_address')]);
-            }
-
-            if ($settings->has('email_reply_to')) {
-                config(['mail.reply_to.address' => $settings->get('email_reply_to')]);
-            }
-
-            // Session configuration
-            if ($settings->has('session_lifetime')) {
-                config(['session.lifetime' => $settings->get('session_lifetime')]);
-            }
-
-            // Media library configuration
-            if ($settings->has('max_file_size')) {
-                config(['media-library.max_file_size' => $settings->get('max_file_size') * 1024]); // Convert KB to bytes
-            }
-
-            if ($settings->has('image_quality')) {
-                // This would need to be implemented in media conversions
-                // For now, we'll store it in a custom config
-                config(['media-library.image_quality' => $settings->get('image_quality')]);
-            }
+            return [
+                'site_name' => $settings->get('site_name'),
+                'timezone' => $settings->get('timezone'),
+                'locale' => $settings->get('locale'),
+                'email_from_name' => $settings->get('email_from_name'),
+                'email_from_address' => $settings->get('email_from_address'),
+            ];
         });
+
+        // Apply only critical settings to config
+        if (! empty($criticalSettings['site_name'])) {
+            config(['app.name' => $criticalSettings['site_name']]);
+        }
+
+        if (! empty($criticalSettings['timezone'])) {
+            config(['app.timezone' => $criticalSettings['timezone']]);
+        }
+
+        if (! empty($criticalSettings['locale'])) {
+            config(['app.locale' => $criticalSettings['locale']]);
+        }
+
+        if (! empty($criticalSettings['email_from_name'])) {
+            config(['mail.from.name' => $criticalSettings['email_from_name']]);
+        }
+
+        if (! empty($criticalSettings['email_from_address'])) {
+            config(['mail.from.address' => $criticalSettings['email_from_address']]);
+        }
+
+        // Non-critical settings can be loaded on-demand via setting() helper
     }
 }

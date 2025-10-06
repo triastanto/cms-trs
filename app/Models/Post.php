@@ -163,28 +163,43 @@ class Post extends Model implements HasMedia
      */
     public function registerMediaCollections(): void
     {
+        // Check if media conversions should be queued (production only)
+        $shouldQueue = config('performance.queue.media_conversions', false);
+
         $this->addMediaCollection('featured_image')
             ->useDisk('public')
             ->singleFile()
-            ->registerMediaConversions(function () {
-                $this->addMediaConversion('thumb')
+            ->registerMediaConversions(function () use ($shouldQueue) {
+                $conversion = $this->addMediaConversion('thumb')
                     ->width(setting('thumbnail_width', 368))
                     ->height(setting('thumbnail_height', 232))
                     ->sharpen(10);
 
-                $this->addMediaConversion('preview')
+                if ($shouldQueue) {
+                    $conversion->queued();
+                }
+
+                $previewConversion = $this->addMediaConversion('preview')
                     ->width(800)
                     ->height(600)
                     ->sharpen(10);
+
+                if ($shouldQueue) {
+                    $previewConversion->queued();
+                }
             });
 
         $this->addMediaCollection('gallery')
             ->useDisk('public')
-            ->registerMediaConversions(function () {
-                $this->addMediaConversion('thumb')
+            ->registerMediaConversions(function () use ($shouldQueue) {
+                $conversion = $this->addMediaConversion('thumb')
                     ->width(setting('thumbnail_width', 368))
                     ->height(setting('thumbnail_height', 232))
                     ->sharpen(10);
+
+                if ($shouldQueue) {
+                    $conversion->queued();
+                }
             });
     }
 }

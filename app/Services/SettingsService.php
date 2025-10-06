@@ -9,7 +9,13 @@ class SettingsService
 {
     protected string $cacheKey = 'settings';
 
-    protected int $cacheTtl = 3600; // 1 hour
+    /**
+     * Get cache TTL based on environment
+     */
+    protected function getCacheTtl(): int
+    {
+        return config('performance.cache.settings_ttl', 3600);
+    }
 
     /**
      * Get a setting value by key
@@ -47,7 +53,7 @@ class SettingsService
     {
         return Cache::remember(
             $this->cacheKey,
-            $this->cacheTtl,
+            $this->getCacheTtl(),
             fn () => Setting::all()
                 ->mapWithKeys(fn ($setting) => [$setting->key => $setting->getTypedValue()])
                 ->toArray()
@@ -61,7 +67,7 @@ class SettingsService
     {
         return Cache::remember(
             $this->cacheKey.'.public',
-            $this->cacheTtl,
+            $this->getCacheTtl(),
             fn () => Setting::public()
                 ->get()
                 ->mapWithKeys(fn ($setting) => [$setting->key => $setting->getTypedValue()])
@@ -76,7 +82,7 @@ class SettingsService
     {
         return Cache::remember(
             $this->cacheKey.".group.{$group}",
-            $this->cacheTtl,
+            $this->getCacheTtl(),
             fn () => Setting::byGroup($group)
                 ->get()
                 ->mapWithKeys(fn ($setting) => [$setting->key => $setting->getTypedValue()])
@@ -112,6 +118,9 @@ class SettingsService
     {
         Cache::forget($this->cacheKey);
         Cache::forget($this->cacheKey.'.public');
+        Cache::forget('critical_settings'); // Clear critical settings cache
+        Cache::forget('maintenance_mode_status'); // Clear maintenance mode cache
+        Cache::forget('maintenance_page_settings'); // Clear maintenance page settings cache
 
         // Clear group caches
         $groups = Setting::distinct()->pluck('group_name');

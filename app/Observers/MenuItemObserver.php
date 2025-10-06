@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\MenuItem;
+use Illuminate\Support\Facades\Cache;
 
 class MenuItemObserver
 {
@@ -26,7 +27,7 @@ class MenuItemObserver
      */
     public function created(MenuItem $menuItem): void
     {
-        //
+        $this->clearMenuCache($menuItem);
     }
 
     /**
@@ -49,7 +50,7 @@ class MenuItemObserver
      */
     public function updated(MenuItem $menuItem): void
     {
-        //
+        $this->clearMenuCache($menuItem);
     }
 
     /**
@@ -59,6 +60,7 @@ class MenuItemObserver
     {
         // Reorder remaining items
         $this->reorderSiblings($menuItem);
+        $this->clearMenuCache($menuItem);
     }
 
     /**
@@ -91,6 +93,17 @@ class MenuItemObserver
 
         foreach ($siblings as $index => $sibling) {
             $sibling->update(['sort_order' => $index + 1]);
+        }
+    }
+
+    /**
+     * Clear menu cache for the affected menu location.
+     */
+    private function clearMenuCache(MenuItem $menuItem): void
+    {
+        $menu = $menuItem->menu;
+        if ($menu && $menu->location) {
+            Cache::forget("menu.location.{$menu->location}");
         }
     }
 }
