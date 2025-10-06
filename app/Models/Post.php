@@ -99,6 +99,9 @@ class Post extends Model implements HasMedia
             if (empty($post->slug)) {
                 $post->slug = Str::slug($post->title);
             }
+            if (empty($post->status)) {
+                $post->status = setting('default_post_status', 'draft');
+            }
         });
 
         // Slug updates are now optional - only update if slug is empty
@@ -147,7 +150,12 @@ class Post extends Model implements HasMedia
             return '';
         }
 
-        return Str::limit(strip_tags($this->content), 150);
+        // Use settings for auto-excerpt generation
+        if (setting('auto_generate_excerpts', true)) {
+            return Str::limit(strip_tags($this->content), setting('excerpt_length', 160));
+        }
+
+        return '';
     }
 
     /**
@@ -160,8 +168,8 @@ class Post extends Model implements HasMedia
             ->singleFile()
             ->registerMediaConversions(function () {
                 $this->addMediaConversion('thumb')
-                    ->width(368)
-                    ->height(232)
+                    ->width(setting('thumbnail_width', 368))
+                    ->height(setting('thumbnail_height', 232))
                     ->sharpen(10);
 
                 $this->addMediaConversion('preview')
@@ -174,8 +182,8 @@ class Post extends Model implements HasMedia
             ->useDisk('public')
             ->registerMediaConversions(function () {
                 $this->addMediaConversion('thumb')
-                    ->width(368)
-                    ->height(232)
+                    ->width(setting('thumbnail_width', 368))
+                    ->height(setting('thumbnail_height', 232))
                     ->sharpen(10);
             });
     }

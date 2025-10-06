@@ -41,7 +41,7 @@ class PostForm
 
                         Select::make('status')
                             ->options(\App\Models\Post::getStatusOptions())
-                            ->default('draft')
+                            ->default(fn () => setting('default_post_status', 'draft'))
                             ->required()
                             ->columnSpanFull(),
 
@@ -121,8 +121,8 @@ class PostForm
                             ->collection('featured_image')
                             ->image()
                             ->required(false)
-                            ->maxSize(2048)
-                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                            ->maxSize(setting('max_image_size', 2048))
+                            ->acceptedFileTypes(explode(',', setting('allowed_image_types', 'image/jpeg,image/png,image/gif,image/webp')))
                             ->helperText('Click to browse or drag and drop an image file. Thumbnails will be automatically generated.')
                             ->imageEditor()
                             ->imageEditorAspectRatios([
@@ -138,8 +138,8 @@ class PostForm
                             ->image()
                             ->multiple()
                             ->reorderable()
-                            ->maxSize(2048)
-                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                            ->maxSize(setting('max_image_size', 2048))
+                            ->acceptedFileTypes(explode(',', setting('allowed_image_types', 'image/jpeg,image/png,image/gif,image/webp')))
                             ->helperText('Upload multiple images for a gallery')
                             ->columnSpanFull(),
                     ])

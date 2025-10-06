@@ -304,4 +304,86 @@ class SettingsHelper
     {
         return self::get('locale', 'en');
     }
+
+    /**
+     * Get SEO settings as array
+     */
+    public static function seoSettings(): array
+    {
+        return [
+            'title' => self::get('default_meta_title', self::siteName()),
+            'description' => self::get('default_meta_description', self::siteDescription()),
+            'keywords' => self::get('default_meta_keywords', ''),
+            'google_analytics_id' => self::get('google_analytics_id', ''),
+            'google_search_console_verification' => self::get('google_search_console_verification', ''),
+        ];
+    }
+
+    /**
+     * Get site settings as array
+     */
+    public static function siteSettings(): array
+    {
+        return [
+            'name' => self::siteName(),
+            'tagline' => self::siteTagline(),
+            'description' => self::siteDescription(),
+            'url' => self::siteUrl(),
+            'keywords' => self::get('site_keywords', ''),
+        ];
+    }
+
+    /**
+     * Get media settings as array
+     */
+    public static function mediaSettings(): array
+    {
+        return [
+            'max_file_size' => self::maxFileSize(),
+            'max_image_size' => self::maxImageSize(),
+            'allowed_image_types' => self::allowedImageTypes(),
+            'image_quality' => self::imageQuality(),
+            'thumbnail_dimensions' => self::thumbnailDimensions(),
+        ];
+    }
+
+    /**
+     * Get content settings as array
+     */
+    public static function contentSettings(): array
+    {
+        return [
+            'default_post_status' => self::defaultPostStatus(),
+            'posts_per_page' => self::postsPerPage(),
+            'auto_generate_excerpts' => self::autoGenerateExcerpts(),
+            'excerpt_length' => self::excerptLength(),
+            'default_category_color' => self::defaultCategoryColor(),
+            'default_tag_color' => self::defaultTagColor(),
+        ];
+    }
+
+    /**
+     * Get user settings as array
+     */
+    public static function userSettings(): array
+    {
+        return [
+            'allow_registration' => self::allowRegistration(),
+            'require_email_verification' => self::requireEmailVerification(),
+            'min_password_length' => self::minPasswordLength(),
+            'session_lifetime' => self::sessionLifetime(),
+        ];
+    }
+
+    /**
+     * Get admin settings as array
+     */
+    public static function adminSettings(): array
+    {
+        return [
+            'theme' => self::adminPanelTheme(),
+            'show_stats_widget' => self::get('show_stats_widget', true),
+            'show_recent_posts_widget' => self::get('show_recent_posts_widget', true),
+        ];
+    }
 }

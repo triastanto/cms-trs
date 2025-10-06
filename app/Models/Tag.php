@@ -36,6 +36,9 @@ class Tag extends Model
             if (empty($tag->slug)) {
                 $tag->slug = Str::slug($tag->name);
             }
+            if (empty($tag->color)) {
+                $tag->color = setting('default_tag_color', '#6B7280');
+            }
         });
 
         static::updating(function ($tag) {

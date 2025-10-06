@@ -66,6 +66,11 @@ class DatabaseSeeder extends Seeder
         $this->call(MenuSeeder::class);
         $this->command->info('✅ Menus seeded successfully');
 
+        // Step 8: Seed settings
+        $this->command->info('⚙️ Seeding settings...');
+        $this->call(SettingsSeeder::class);
+        $this->command->info('✅ Settings seeded successfully');
+
         $this->command->info('🎉 Database seeding completed successfully!');
         $this->command->info('');
         $this->command->info('📊 Summary:');
@@ -75,5 +80,6 @@ class DatabaseSeeder extends Seeder
         $this->command->info('   Posts: '.\App\Models\Post::count());
         $this->command->info('   Menus: '.\App\Models\Menu::count());
         $this->command->info('   Menu Items: '.\App\Models\MenuItem::count());
+        $this->command->info('   Settings: '.\App\Models\Setting::count());
     }
 }

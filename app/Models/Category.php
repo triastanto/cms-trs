@@ -26,6 +26,10 @@ class Category extends Model implements HasMedia
         'is_active',
     ];
 
+    protected $attributes = [
+        'color' => '#3B82F6',
+    ];
+
     protected $casts = [
         'is_active' => 'boolean',
         'sort_order' => 'integer',
@@ -53,6 +57,9 @@ class Category extends Model implements HasMedia
         static::creating(function ($category) {
             if (empty($category->slug)) {
                 $category->slug = Str::slug($category->name);
+            }
+            if (empty($category->color)) {
+                $category->color = setting('default_category_color', '#3B82F6');
             }
         });
 

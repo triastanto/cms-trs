@@ -155,7 +155,7 @@ describe('Post Model', function () {
             ]);
 
             expect($post->excerpt)->toContain('This is a very long content');
-            expect(strlen($post->excerpt))->toBeLessThanOrEqual(160); // Allow for reasonable excerpt length
+            expect(strlen($post->excerpt))->toBeLessThanOrEqual(163); // Allow for reasonable excerpt length (160 + 3 for ellipsis)
         });
 
         it('uses provided excerpt when available', function () {
