@@ -14,7 +14,7 @@ class SettingsService
      */
     protected function getCacheTtl(): int
     {
-        return config('performance.cache.settings_ttl', 3600);
+        return (int) config('performance.cache.settings_ttl', 3600);
     }
 
     /**
