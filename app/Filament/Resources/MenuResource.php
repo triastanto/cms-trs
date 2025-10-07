@@ -5,9 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\MenuResource\Pages;
 use App\Models\Menu;
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -70,10 +68,7 @@ class MenuResource extends Resource
                 Tables\Filters\TernaryFilter::make('is_active')
                     ->boolean(),
             ])
-            ->actions([
-                EditAction::make(),
-                DeleteAction::make(),
-            ])
+            ->actions([])
             ->bulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),

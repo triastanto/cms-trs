@@ -3,11 +3,8 @@
 namespace App\Filament\Resources\TagResource\Tables;
 
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
 use Filament\Tables\Columns\BadgeColumn;
-use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
@@ -18,24 +15,11 @@ class TagsTable
     {
         return $table
             ->columns([
-                ColorColumn::make('color')
-                    ->label('')
-                    ->placeholder('No color'),
-
                 TextColumn::make('name')
                     ->label('Name')
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
-
-                TextColumn::make('slug')
-                    ->label('Slug')
-                    ->searchable()
-                    ->sortable()
-                    ->copyable()
-                    ->copyMessage('Slug copied!')
-                    ->color('gray')
-                    ->fontFamily('mono'),
 
                 TextColumn::make('description')
                     ->label('Description')
@@ -57,18 +41,6 @@ class TagsTable
                     ->sortable()
                     ->badge()
                     ->color('info'),
-
-                TextColumn::make('created_at')
-                    ->label('Created')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-
-                TextColumn::make('updated_at')
-                    ->label('Updated')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 TernaryFilter::make('is_active')
@@ -77,11 +49,7 @@ class TagsTable
                     ->trueLabel('Active only')
                     ->falseLabel('Inactive only'),
             ])
-            ->actions([
-                EditAction::make(),
-                DeleteAction::make()
-                    ->requiresConfirmation(),
-            ])
+            ->actions([])
             ->bulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make()

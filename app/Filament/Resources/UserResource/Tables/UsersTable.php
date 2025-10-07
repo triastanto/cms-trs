@@ -2,15 +2,11 @@
 
 namespace App\Filament\Resources\UserResource\Tables;
 
-use App\Models\User;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\TernaryFilter;
@@ -22,26 +18,12 @@ class UsersTable
     {
         return $table
             ->columns([
-                SpatieMediaLibraryImageColumn::make('avatar')
-                    ->label('Avatar')
-                    ->collection('avatar')
-                    ->conversion('thumb')
-                    ->circular()
-                    ->size(40)
-                    ->defaultImageUrl(fn ($record) => 'https://ui-avatars.com/api/?name='.urlencode($record->name).'&color=7F9CF5&background=EBF4FF'),
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('email')
                     ->searchable()
                     ->sortable(),
-                IconColumn::make('email_verified_at')
-                    ->label('Email Verified')
-                    ->boolean()
-                    ->trueIcon('heroicon-o-check-circle')
-                    ->falseIcon('heroicon-o-x-circle')
-                    ->trueColor('success')
-                    ->falseColor('danger'),
                 TextColumn::make('roles.name')
                     ->label('Role')
                     ->badge()
@@ -50,14 +32,13 @@ class UsersTable
                         'Content Manager' => 'success',
                         default => 'gray',
                     }),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                IconColumn::make('email_verified_at')
+                    ->label('Verified')
+                    ->boolean()
+                    ->trueIcon('heroicon-o-check-circle')
+                    ->falseIcon('heroicon-o-x-circle')
+                    ->trueColor('success')
+                    ->falseColor('danger'),
             ])
             ->filters([
                 TernaryFilter::make('email_verified_at')
@@ -85,28 +66,7 @@ class UsersTable
                             );
                     }),
             ])
-            ->actions([
-                EditAction::make(),
-                \Filament\Actions\Action::make('verify_email')
-                    ->label('Verify Email')
-                    ->icon('heroicon-o-check-circle')
-                    ->color('success')
-                    ->visible(fn (User $record): bool => $record->email_verified_at === null)
-                    ->action(function (User $record): void {
-                        $record->markEmailAsVerified();
-                    })
-                    ->requiresConfirmation(),
-                \Filament\Actions\Action::make('send_verification')
-                    ->label('Send Verification')
-                    ->icon('heroicon-o-envelope')
-                    ->color('info')
-                    ->visible(fn (User $record): bool => $record->email_verified_at === null)
-                    ->action(function (User $record): void {
-                        $record->sendEmailVerificationNotification();
-                    })
-                    ->requiresConfirmation(),
-                DeleteAction::make(),
-            ])
+            ->actions([])
             ->bulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),

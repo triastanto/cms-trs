@@ -4,9 +4,7 @@ namespace App\Filament\Resources\PostResource\Tables;
 
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
@@ -47,14 +45,6 @@ class PostsTable
                     ->color('info')
                     ->placeholder('No category'),
 
-                TextColumn::make('tags.name')
-                    ->label('Tags')
-                    ->badge()
-                    ->color('primary')
-                    ->separator(',')
-                    ->placeholder('No tags')
-                    ->toggleable(),
-
                 BadgeColumn::make('status')
                     ->label('Status')
                     ->colors([
@@ -69,18 +59,6 @@ class PostsTable
                     ->dateTime()
                     ->sortable()
                     ->toggleable(),
-
-                TextColumn::make('created_at')
-                    ->label('Created')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-
-                TextColumn::make('updated_at')
-                    ->label('Updated')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('status')
@@ -118,10 +96,7 @@ class PostsTable
                             );
                     }),
             ])
-            ->actions([
-                EditAction::make(),
-                DeleteAction::make(),
-            ])
+            ->actions([])
             ->bulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),

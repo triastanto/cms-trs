@@ -6,9 +6,7 @@ use App\Filament\Resources\MenuItemResource\Pages;
 use App\Models\Menu;
 use App\Models\MenuItem;
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -100,17 +98,6 @@ class MenuItemResource extends Resource
                 Tables\Columns\TextColumn::make('url')
                     ->limit(30),
 
-                Tables\Columns\IconColumn::make('is_external')
-                    ->label('External')
-                    ->boolean(),
-
-                Tables\Columns\TextColumn::make('target')
-                    ->badge(),
-
-                Tables\Columns\TextColumn::make('sort_order')
-                    ->label('Order')
-                    ->sortable(),
-
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean(),
             ])
@@ -125,10 +112,7 @@ class MenuItemResource extends Resource
                 Tables\Filters\TernaryFilter::make('is_external')
                     ->boolean(),
             ])
-            ->actions([
-                EditAction::make(),
-                DeleteAction::make(),
-            ])
+            ->actions([])
             ->bulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),

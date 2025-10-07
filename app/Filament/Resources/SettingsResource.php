@@ -6,9 +6,7 @@ use App\Filament\Resources\SettingsResource\Pages;
 use App\Models\Setting;
 use BackedEnum;
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
@@ -54,17 +52,6 @@ class SettingsResource extends Resource
                     })
                     ->sortable(),
 
-                TextColumn::make('type')
-                    ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'string' => 'gray',
-                        'boolean' => 'success',
-                        'integer' => 'warning',
-                        'json' => 'info',
-                        'text' => 'primary',
-                        default => 'gray',
-                    }),
-
                 TextColumn::make('value')
                     ->limit(50)
                     ->tooltip(function (TextColumn $column): ?string {
@@ -76,11 +63,6 @@ class SettingsResource extends Resource
                 IconColumn::make('is_public')
                     ->boolean()
                     ->label('Public'),
-
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('group_name')
@@ -110,10 +92,7 @@ class SettingsResource extends Resource
                     ->trueLabel('Public only')
                     ->falseLabel('Private only'),
             ])
-            ->actions([
-                EditAction::make(),
-                DeleteAction::make(),
-            ])
+            ->actions([])
             ->bulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),

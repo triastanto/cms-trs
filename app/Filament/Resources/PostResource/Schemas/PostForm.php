@@ -121,15 +121,7 @@ class PostForm
                             ->collection('featured_image')
                             ->image()
                             ->required(false)
-                            ->maxSize(setting('max_image_size', 2048))
-                            ->acceptedFileTypes(explode(',', setting('allowed_image_types', 'image/jpeg,image/png,image/gif,image/webp')))
                             ->helperText('Click to browse or drag and drop an image file. Thumbnails will be automatically generated.')
-                            ->imageEditor()
-                            ->imageEditorAspectRatios([
-                                '16:9',
-                                '4:3',
-                                '1:1',
-                            ])
                             ->columnSpanFull(),
 
                         SpatieMediaLibraryFileUpload::make('gallery')
@@ -138,8 +130,6 @@ class PostForm
                             ->image()
                             ->multiple()
                             ->reorderable()
-                            ->maxSize(setting('max_image_size', 2048))
-                            ->acceptedFileTypes(explode(',', setting('allowed_image_types', 'image/jpeg,image/png,image/gif,image/webp')))
                             ->helperText('Upload multiple images for a gallery')
                             ->columnSpanFull(),
                     ])
