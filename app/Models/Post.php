@@ -110,6 +110,7 @@ class Post extends Model implements HasMedia
                 $post->slug = Str::slug($post->title);
             }
         });
+
     }
 
     /**
@@ -166,9 +167,8 @@ class Post extends Model implements HasMedia
         // Check if media conversions should be queued (production only)
         $shouldQueue = config('performance.queue.media_conversions', false);
 
-        $this->addMediaCollection('featured_image')
+        $this->addMediaCollection('post_images')
             ->useDisk('public')
-            ->singleFile()
             ->registerMediaConversions(function () use ($shouldQueue) {
                 $conversion = $this->addMediaConversion('thumb')
                     ->width(setting('thumbnail_width', 368))
@@ -188,18 +188,57 @@ class Post extends Model implements HasMedia
                     $previewConversion->queued();
                 }
             });
+    }
 
-        $this->addMediaCollection('gallery')
-            ->useDisk('public')
-            ->registerMediaConversions(function () use ($shouldQueue) {
-                $conversion = $this->addMediaConversion('thumb')
-                    ->width(setting('thumbnail_width', 368))
-                    ->height(setting('thumbnail_height', 232))
-                    ->sharpen(10);
+    /**
+     * Get the featured image.
+     */
+    public function getFeaturedImage()
+    {
+        return $this->getMedia('post_images')
+            ->first(fn ($media) => $media->getCustomProperty('is_featured') === true);
+    }
 
-                if ($shouldQueue) {
-                    $conversion->queued();
-                }
-            });
+    /**
+     * Get all gallery images (non-featured).
+     */
+    public function getGalleryImages()
+    {
+        return $this->getMedia('post_images')
+            ->filter(fn ($media) => $media->getCustomProperty('is_featured') !== true);
+    }
+
+    /**
+     * Set a specific image as featured, unsetting others.
+     */
+    public function setFeaturedImage($mediaId): void
+    {
+        // Unset all featured flags
+        foreach ($this->getMedia('post_images') as $media) {
+            if ($media->getCustomProperty('is_featured') === true) {
+                $media->setCustomProperty('is_featured', false);
+                $media->save();
+            }
+        }
+
+        // Set the specified media as featured
+        $media = $this->getMedia('post_images')->firstWhere('id', $mediaId);
+        if ($media) {
+            $media->setCustomProperty('is_featured', true);
+            $media->save();
+        }
+    }
+
+    /**
+     * Unset featured image.
+     */
+    public function unsetFeaturedImage(): void
+    {
+        foreach ($this->getMedia('post_images') as $media) {
+            if ($media->getCustomProperty('is_featured') === true) {
+                $media->setCustomProperty('is_featured', false);
+                $media->save();
+            }
+        }
     }
 }

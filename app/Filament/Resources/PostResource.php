@@ -9,6 +9,7 @@ use App\Filament\Resources\PostResource\Schemas\PostForm;
 use App\Filament\Resources\PostResource\Tables\PostsTable;
 use App\Models\Post;
 use BackedEnum;
+use Filament\Forms\Components\Placeholder;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -42,6 +43,68 @@ class PostResource extends Resource
     public static function table(Table $table): Table
     {
         return PostsTable::configure($table);
+    }
+
+    public static function infolist(Schema $schema): Schema
+    {
+        return $schema
+            ->schema([
+                \Filament\Schemas\Components\Section::make('Post Information')
+                    ->schema([
+                        Placeholder::make('title')
+                            ->label('Title')
+                            ->content(fn ($record) => $record->title),
+
+                        Placeholder::make('slug')
+                            ->label('Slug')
+                            ->content(fn ($record) => $record->slug),
+
+                        Placeholder::make('status')
+                            ->label('Status')
+                            ->content(fn ($record) => ucfirst($record->status)),
+
+                        Placeholder::make('published_at')
+                            ->label('Published At')
+                            ->content(fn ($record) => $record->published_at?->format('Y-m-d H:i:s') ?? 'Not published'),
+                    ])
+                    ->columns(2)
+                    ->collapsible(),
+
+                \Filament\Schemas\Components\Section::make('Images')
+                    ->schema([
+                        Placeholder::make('featured_image_info')
+                            ->label('Featured Image')
+                            ->content(function ($record) {
+                                $featuredImage = $record->getFeaturedImage();
+                                if (! $featuredImage) {
+                                    return 'No featured image set';
+                                }
+                                $title = $featuredImage->getCustomProperty('title') ?: 'No title';
+
+                                return $title.' ('.$featuredImage->file_name.')';
+                            }),
+
+                        Placeholder::make('gallery_count')
+                            ->label('Gallery Images')
+                            ->content(function ($record) {
+                                $galleryImages = $record->getGalleryImages();
+                                $count = $galleryImages->count();
+                                if ($count === 0) {
+                                    return 'No gallery images';
+                                }
+
+                                return $count.' image'.($count > 1 ? 's' : '');
+                            }),
+
+                        Placeholder::make('total_images')
+                            ->label('Total Images')
+                            ->content(function ($record) {
+                                return $record->getMedia('post_images')->count().' total';
+                            }),
+                    ])
+                    ->columns(3)
+                    ->collapsible(),
+            ]);
     }
 
     public static function getRelations(): array

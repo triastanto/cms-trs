@@ -5,6 +5,7 @@ namespace App\Filament\Resources\PostResource\Pages;
 use App\Filament\Resources\PostResource;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
+use Livewire\Attributes\On;
 
 class EditPost extends EditRecord
 {
@@ -15,5 +16,14 @@ class EditPost extends EditRecord
         return [
             DeleteAction::make(),
         ];
+    }
+
+    #[On('set-featured-image')]
+    public function setFeaturedImage($mediaId): void
+    {
+        $this->record->setFeaturedImage($mediaId);
+
+        // Refresh the form to show updated badge
+        $this->fillForm();
     }
 }

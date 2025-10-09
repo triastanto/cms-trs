@@ -19,12 +19,24 @@ class PostsTable
     {
         return $table
             ->columns([
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable()
+                    ->searchable()
+                    ->width('80px'),
+
                 SpatieMediaLibraryImageColumn::make('featured_image')
                     ->label('Image')
-                    ->collection('featured_image')
+                    ->collection('post_images')
                     ->conversion('thumb')
                     ->circular()
-                    ->size(40),
+                    ->size(40)
+                    ->getStateUsing(function ($record) {
+                        // Get the featured image from post_images collection
+                        $featuredImage = $record->getFeaturedImage();
+
+                        return $featuredImage ? [$featuredImage->id] : [];
+                    }),
 
                 TextColumn::make('title')
                     ->label('Title')
