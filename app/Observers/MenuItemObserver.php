@@ -101,6 +101,7 @@ class MenuItemObserver
      */
     private function clearMenuCache(MenuItem $menuItem): void
     {
+        /** @var \App\Models\Menu|null $menu */
         $menu = $menuItem->menu;
         if ($menu && $menu->location) {
             Cache::forget("menu.location.{$menu->location}");

@@ -21,7 +21,9 @@ class EditPost extends EditRecord
     #[On('set-featured-image')]
     public function setFeaturedImage($mediaId): void
     {
-        $this->record->setFeaturedImage($mediaId);
+        /** @var \App\Models\Post $post */
+        $post = $this->record;
+        $post->setFeaturedImage($mediaId);
 
         // Refresh the form to show updated badge
         $this->fillForm();

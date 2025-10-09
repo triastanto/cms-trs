@@ -111,6 +111,14 @@ class Post extends Model implements HasMedia
             }
         });
 
+        // Clear page cache when post is saved or deleted
+        static::saved(function ($post) {
+            \Illuminate\Support\Facades\Cache::flush();
+        });
+
+        static::deleted(function ($post) {
+            \Illuminate\Support\Facades\Cache::flush();
+        });
     }
 
     /**
@@ -176,6 +184,7 @@ class Post extends Model implements HasMedia
                     ->sharpen(10);
 
                 if ($shouldQueue) {
+                    // @phpstan-ignore-next-line
                     $conversion->queued();
                 }
 
@@ -185,6 +194,7 @@ class Post extends Model implements HasMedia
                     ->sharpen(10);
 
                 if ($shouldQueue) {
+                    // @phpstan-ignore-next-line
                     $previewConversion->queued();
                 }
             });

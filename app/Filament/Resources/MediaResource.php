@@ -23,6 +23,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Artisan;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use UnitEnum;
@@ -595,8 +596,8 @@ class MediaResource extends Resource
                         ->icon('heroicon-o-arrow-path')
                         ->color('warning')
                         ->action(function (Collection $records) {
-                            $records->each(function (Media $record) {
-                                if (str_starts_with($record->mime_type, 'image/')) {
+                            $records->each(function (Model|Media $record) {
+                                if ($record instanceof Media && str_starts_with($record->mime_type, 'image/')) {
                                     try {
                                         Artisan::call('media-library:regenerate', [
                                             'modelType' => get_class($record->model),
@@ -632,9 +633,11 @@ class MediaResource extends Resource
                                 ->required(),
                         ])
                         ->action(function (Collection $records, array $data): void {
-                            $records->each(function (Media $record) use ($data) {
-                                $record->collection_name = $data['collection_name'];
-                                $record->save();
+                            $records->each(function (Model|Media $record) use ($data) {
+                                if ($record instanceof Media) {
+                                    $record->collection_name = $data['collection_name'];
+                                    $record->save();
+                                }
                             });
 
                             Notification::make()
@@ -664,7 +667,10 @@ class MediaResource extends Resource
                                 ->maxLength(500),
                         ])
                         ->action(function (Collection $records, array $data): void {
-                            $records->each(function (Media $record) use ($data) {
+                            $records->each(function (Model|Media $record) use ($data) {
+                                if (! $record instanceof Media) {
+                                    return;
+                                }
                                 if (filled($data['title'])) {
                                     $record->setCustomProperty('title', $data['title']);
                                 }

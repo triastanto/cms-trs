@@ -116,6 +116,7 @@ class Category extends Model implements HasMedia
                     ->sharpen(10);
 
                 if ($shouldQueue) {
+                    // @phpstan-ignore-next-line
                     $conversion->queued();
                 }
             });
